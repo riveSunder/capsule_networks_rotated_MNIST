@@ -152,7 +152,7 @@ class CapsuleLoss(nn.Module):
         return (margin_loss + 0.0005 * reconstruction_loss) / images.size(0)
 
 
-def train_and_test_capsnet():
+def train_and_test_capsnet(load_model=False):
     from torch.autograd import Variable
     from torch.optim import Adam
     from torchnet.engine import Engine
@@ -163,10 +163,15 @@ def train_and_test_capsnet():
     import torchnet as tnt
 
     model = CapsuleNet()
-    # this line is intended to be used when running the script from a Jupyter notebook one level up
-    model.load_state_dict(torch.load("./capsule_networks_rotated_MNIST/epochs/epoch_32.pt"))
-    # otherwise use:
-    #model.load_state_dict(torch.load("./epochs/epoch_32.pt"))
+    
+    if load_model:
+        try:
+            # this line is intended to be used when running the script from a Jupyter notebook one level up
+            model.load_state_dict(torch.load("./capsule_networks_rotated_MNIST/epochs/epoch_32.pt"))
+        except:
+            # otherwise use:
+            model.load_state_dict(torch.load("./epochs/epoch_32.pt"))
+            
     model.cuda()
 
     print("# parameters:", sum(param.numel() for param in model.parameters()))
